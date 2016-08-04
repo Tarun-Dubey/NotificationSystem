@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/context
+                http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/mvc
+                http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                http://www.springframework.org/schema/data/mongo
+                http://www.springframework.org/schema/data/mongo/spring-mongo-1.5.xsd">
+
+    <context:component-scan base-package="com.wavemaker.notification.*" />
+    <context:annotation-config />
+
+    <mvc:annotation-driven enable-matrix-variables="true">
+        <mvc:argument-resolvers>
+            <ref bean="sortResolver"/>
+            <ref bean="pageableResolver" />
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+
+    <bean id="sortResolver" class="org.springframework.data.web.SortHandlerMethodArgumentResolver" />
+    <bean id="pageableResolver" class="org.springframework.data.web.PageableHandlerMethodArgumentResolver">
+        <constructor-arg ref="sortResolver" />
+    </bean>
+
+    <mongo:mongo host="localhost" port="27017" id="mongo" />
+    <mongo:db-factory dbname="test" mongo-ref="mongo" id="mongoDbFactory" />
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg  ref="mongoDbFactory" />
+    </bean>
+    <!--<bean id="pushTherad" class="com.wavemaker.notification.pubsubshThread" init-method="initThread" depends-on="mongoTemplate">
+
+    </bean>-->
+    <!--<bean id="channel" class="com.wavemaker.notification.pubsubblisher" init-method="initThread" depends-on="mongoTemplate">
+
+    </bean>-->
+
+
+
+
+
+
+</beans>
